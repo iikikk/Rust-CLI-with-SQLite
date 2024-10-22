@@ -78,9 +78,9 @@ use std::path::Path;
 use std::process;
 
 // mod lib; // Import lib.rs
-use sqlite::{Movie, MovieManager};
-use lib::MovieManager;
-
+// use sqlite::{Movie, MovieManager};
+// use lib::MovieManager;
+use sqlite::MovieManager; 
 /// Enum representing available commands.
 enum Command {
     Create,
