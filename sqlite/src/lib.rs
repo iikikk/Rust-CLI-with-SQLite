@@ -82,7 +82,6 @@
 
 use std::error::Error;
 use std::fs::File;
-use std::io::Write;
 use csv::{ReaderBuilder, WriterBuilder};
 
 /// Represents a movie record.
@@ -109,6 +108,12 @@ impl Movie {
 /// Manages a collection of movies.
 pub struct MovieManager {
     pub movies: Vec<Movie>,
+}
+
+impl Default for MovieManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl MovieManager {
@@ -140,7 +145,7 @@ impl MovieManager {
         let file = File::create(filepath)?;
         let mut wtr = WriterBuilder::new().has_headers(true).from_writer(file);
 
-        wtr.write_record(&["id", "title", "director", "release_date"])?;
+        wtr.write_record(["id", "title", "director", "release_date"])?;
 
         for movie in &self.movies {
             wtr.write_record(&[
