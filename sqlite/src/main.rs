@@ -77,7 +77,7 @@ use std::error::Error;
 use std::path::Path;
 use std::process;
 
-mod lib; // Import lib.rs
+// mod lib; // Import lib.rs
 
 use lib::MovieManager;
 
@@ -110,7 +110,7 @@ impl Command {
 fn print_help() {
     println!("Usage:");
     println!("    tool_name <command> [arguments]");
-    println!("");
+    println!();
     println!("Commands:");
     println!("    create <id> <title> <director> <release_date>");
     println!("    read <id>");
