@@ -54,43 +54,43 @@ Execute commands using the syntax below:
 
 - **Creating a Movie**:
   ```bash
-  sqlite create <id> <title> <director> <release_date>
+  cargo run -- create <id> "<title>" "<director>" "<release_date>"
   ```
   Example:
   ```bash
-  sqlite create 1 "Inception" "Christopher Nolan" "2010/7/16"
+  cargo run -- create 1 "Inception" "Christopher Nolan" "2010/07/16"
   ```
 
 - **Reading a Movie**:
   ```bash
-  sqlite read <id>
+  cargo run -- read <id>
   ```
   Example:
   ```bash
-  sqlite read 1
+  cargo run -- read 1
   ```
 
 - **Updating a Movie**:
   ```bash
-  sqlite update <id> [title] [director] [release_date]
+  cargo run -- update <id> ["<title>"] ["<director>"] ["<release_date>"]
   ```
   Example:
   ```bash
-  sqlite update 1 "Inception" "Christopher Nolan" "2010/7/18"
+  cargo run -- update 1 "Inception: The Beginning"
   ```
 
 - **Deleting a Movie**:
   ```bash
-  sqlite delete <id>
+  cargo run -- delete <id>
   ```
   Example:
   ```bash
-  sqlite delete 1
+  cargo run -- delete 1
   ```
 
 - **Listing All Movies**:
   ```bash
-  sqlite list
+  cargo run -- list
   ```
 
 ## CI/CD Pipeline
