@@ -9,6 +9,7 @@ pub struct Movie {
     pub release_date: String,
 }
 
+#[allow(dead_code)]
 impl Movie {
     /// 创建一个新的电影实例。
     pub fn new(id: u32, title: String, director: String, release_date: String) -> Self {

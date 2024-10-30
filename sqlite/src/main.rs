@@ -1,9 +1,7 @@
 use std::env;
 use std::error::Error;
 use std::process;
-
-mod lib;
-use lib::MovieManager;
+use sqlite::MovieManager;
 
 /// 枚举，表示可用的命令。
 enum Command {
