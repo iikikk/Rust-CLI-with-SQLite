@@ -1,87 +1,11 @@
-// use clap::{Parser, Subcommand};
-// use rusqlite::{Connection, Result as SqliteResult};
-
-// // Import your library functions here. Assuming they are in the `lib` module.
-// use sqlite::{create_movie_table, query_movies, update_movie, delete_movie, load_data_from_csv};
-
-// #[derive(Parser, Debug)]
-// #[command(name = "rust-cli")]
-// #[command(about = "A simple CLI for managing a movies database", long_about = None)]
-// struct Cli {
-//     #[command(subcommand)]
-//     command: Commands,
-// }
-
-// #[derive(Subcommand, Debug)]
-// enum Commands {
-//     /// Pass a table name to create a table
-//     #[command(alias = "c", short_flag = 'c')]
-//     Create { table_name: String },
-//     /// Query to list all movies
-//     #[command(alias = "q", short_flag = 'q')]
-//     Query {},
-//     /// Update a movie's details by ID
-//     #[command(alias = "u", short_flag = 'u')]
-//     Update {
-//         id: i32,
-//         title: String,
-//         director: String,
-//         release_date: String,
-//     },
-//     /// Delete a movie by ID
-//     #[command(alias = "d", short_flag = 'd')]
-//     Delete { id: i32 },
-//     /// Load movie data from a CSV file
-//     #[command(alias = "l", short_flag = 'l')]
-//     Load {
-//         table_name: String,
-//         file_path: String,
-//     },
-// }
-
-// fn main() -> SqliteResult<()> {
-//     let cli = Cli::parse();
-//     let conn = Connection::open("data/movies.db")?;
-
-//     match cli.command {
-//         Commands::Create { table_name } => {
-//             println!("Creating table '{}'", table_name);
-//             // Assuming create_movie_table does not actually use table_name, adjust if needed
-//             create_movie_table(&conn)?;
-//             println!("Table created successfully.");
-//         },
-//         Commands::Query {} => {
-//             let movies = query_movies(&conn)?;
-//             println!("Movies: {:?}", movies);
-//         },
-//         Commands::Update { id, title, director, release_date } => {
-//             update_movie(&conn, id, &title, &director, &release_date)?;
-//             println!("Movie with ID {} updated successfully.", id);
-//         },
-//         Commands::Delete { id } => {
-//             delete_movie(&conn, id)?;
-//             println!("Movie with ID {} deleted successfully.", id);
-//         },
-//         Commands::Load { table_name, file_path } => {
-//             load_data_from_csv(&conn, &table_name, &file_path)?;
-//             println!("Data loaded successfully from '{}'", file_path);
-//         },
-//     }
-
-//     Ok(())
-// }
-// main.rs
-
 use std::env;
 use std::error::Error;
-use std::path::Path;
 use std::process;
 
-// mod lib; // Import lib.rs
-// use sqlite::{Movie, MovieManager};
-// use lib::MovieManager;
-use sqlite::MovieManager; 
-/// Enum representing available commands.
+mod lib;
+use lib::MovieManager;
+
+/// 枚举，表示可用的命令。
 enum Command {
     Create,
     Read,
@@ -92,7 +16,7 @@ enum Command {
 }
 
 impl Command {
-    /// Converts a string to a Command enum variant.
+    /// 将字符串转换为命令枚举。
     fn from_str(input: &str) -> Option<Command> {
         match input.to_lowercase().as_str() {
             "create" => Some(Command::Create),
@@ -106,7 +30,7 @@ impl Command {
     }
 }
 
-/// Prints help information.
+/// 打印帮助信息。
 fn print_help() {
     println!("Usage:");
     println!("    tool_name <command> [arguments]");
@@ -121,17 +45,17 @@ fn print_help() {
 }
 
 fn main() -> Result<(), Box<dyn Error>> {
-    // Collect command-line arguments
+    // 收集命令行参数
     let args: Vec<String> = env::args().collect();
 
-    // Check if a command is provided
+    // 检查是否提供了命令
     if args.len() < 2 {
         eprintln!("Error: No command provided.");
         print_help();
         process::exit(1);
     }
 
-    // Parse the command
+    // 解析命令
     let command_str = &args[1];
     let command = match Command::from_str(command_str) {
         Some(cmd) => cmd,
@@ -142,15 +66,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         }
     };
 
-    let mut manager = MovieManager::new();
+    // 初始化电影管理器
+    let manager = MovieManager::new("movies.db")?;
 
-    // Load data from CSV
-    let data_file = "../data/movies.csv";
-    if Path::new(data_file).exists() {
-        manager.load_data_from_csv(data_file)?;
-    }
-
-    // Match the command and execute the corresponding action
+    // 根据命令执行相应的操作
     match command {
         Command::Create => {
             if args.len() != 6 {
@@ -161,8 +80,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let title = args[3].clone();
             let director = args[4].clone();
             let release_date = args[5].clone();
-            manager.create_movie(id, title, director, release_date);
-            manager.save_data_to_csv(data_file)?;
+            manager.create_movie(id, title, director, release_date)?;
             println!("Movie created.");
         }
         Command::Read => {
@@ -171,7 +89,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 process::exit(1);
             }
             let id: u32 = args[2].parse()?;
-            if let Some(movie) = manager.read_movie(id) {
+            if let Some(movie) = manager.read_movie(id)? {
                 println!(
                     "ID: {}, Title: {}, Director: {}, Release Date: {}",
                     movie.id, movie.title, movie.director, movie.release_date
@@ -190,8 +108,7 @@ fn main() -> Result<(), Box<dyn Error>> {
             let director = args.get(4).cloned();
             let release_date = args.get(5).cloned();
 
-            if manager.update_movie(id, title, director, release_date) {
-                manager.save_data_to_csv(data_file)?;
+            if manager.update_movie(id, title, director, release_date)? {
                 println!("Movie updated.");
             } else {
                 println!("Movie with ID {} not found.", id);
@@ -203,15 +120,14 @@ fn main() -> Result<(), Box<dyn Error>> {
                 process::exit(1);
             }
             let id: u32 = args[2].parse()?;
-            if manager.delete_movie(id) {
-                manager.save_data_to_csv(data_file)?;
+            if manager.delete_movie(id)? {
                 println!("Movie deleted.");
             } else {
                 println!("Movie with ID {} not found.", id);
             }
         }
         Command::List => {
-            manager.list_movies();
+            manager.list_movies()?;
         }
         Command::Help => {
             print_help();
