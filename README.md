@@ -1,7 +1,8 @@
 # Rust CLI Tool
 
 SQLite is a command-line interface tool built with Rust, enabling efficient management of a simple movie database. This CLI tool allows for operations such as adding, retrieving, updating, deleting, and listing movie records.
-
+## Demo Video
+https://youtu.be/5IB95F-V8js
 ## Table of Contents
 
 - [Features](#features)
