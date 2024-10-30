@@ -48,7 +48,7 @@ Execute commands using the syntax below:
 
 - **Help**:
   ```bash
-  sqlite help
+  cargo run help
   ```
   Displays usage and commands.
 
@@ -116,8 +116,6 @@ During the development of this project, GitHub Copilot was utilized extensively 
 2. YAML Configuration: Generating initial GitHub Actions workflow files (build.yml, test.yml, lint.yml), which were then customized.
 3. Efficiency: Speeding up the development process by providing context-aware suggestions.
 
-Example:
-While writing the main.rs file, Copilot suggested function signatures and match statements, allowing for quicker development of command parsing logic.
 
 ## Use of Large Language Models (LLMs)
 LLMs were instrumental in debugging and refining the project, especially in the CI/CD integration phase.
