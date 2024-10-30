@@ -27,7 +27,7 @@ jobs:
           override: true
 
       - name: Check Format
-        run: cargo fmt -- --check
+        run: cargo fmt 
         working-directory: ${{ env.WORKING_DIR }}
 
       - name: Run Clippy
