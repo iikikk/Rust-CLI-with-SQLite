@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Upload Artifact
+    runs-on: ubuntu-latest
+
+    env:
+      WORKING_DIR: sqlite # 将其更改为您的Rust项目名称
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          override: true
+
+      - name: Build Release
+        run: cargo build --release
+        working-directory: ${{ env.WORKING_DIR }}
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RuSQLite CLI Binary
+          path: ${{ env.WORKING_DIR }}/target/release/sqlite # 修改为您的二进制文件名称

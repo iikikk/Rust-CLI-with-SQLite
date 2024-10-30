@@ -31,7 +31,7 @@ impl Command {
 /// 打印帮助信息。
 fn print_help() {
     println!("Usage:");
-    println!("    tool_name <command> [arguments]");
+    println!("    cargo run -- <command> [arguments]");
     println!();
     println!("Commands:");
     println!("    create <id> <title> <director> <release_date>");
